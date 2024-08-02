@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalTime;
 
 @Entity(name = "task")
 @Table(name = "task")
@@ -15,7 +16,18 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private Status status;
+    private String status;
     private String created_at;
+    private String updated_at;
+    private boolean is_active;
+
+    public Task(PostTaskDTO postTaskDTO) {
+        this.title = postTaskDTO.title();
+        this.description = postTaskDTO.description();
+        this.status = Status.BACKLOG.name();
+        this.created_at = LocalTime.now().toString();
+        this.updated_at = LocalTime.now().toString();
+        this.is_active = true;
+    }
 
 }
