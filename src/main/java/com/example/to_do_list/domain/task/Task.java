@@ -1,9 +1,8 @@
 package com.example.to_do_list.domain.task;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalTime;
 
 @Entity(name = "task")
@@ -11,9 +10,11 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Task {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;
     private String title;
     private String description;
     private String status;
@@ -29,5 +30,4 @@ public class Task {
         this.updated_at = LocalTime.now().toString();
         this.is_active = true;
     }
-
 }

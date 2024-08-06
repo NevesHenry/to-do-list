@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -35,8 +36,16 @@ public class TaskController {
 
     @Transactional
     @PutMapping
-    public String updateTask() {
-        return "Task updated";
+    public ResponseEntity<Task> updateTask(@RequestBody @Validated PostTaskDTO data) {
+        Optional<Task> task = taskRepository.findById(data.id());
+        if (task.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Task taskToUpdate = task.get();
+        taskToUpdate.setTitle(data.title());
+        taskToUpdate.setDescription(data.description());
+        taskRepository.save(taskToUpdate);
+        return ResponseEntity.ok(taskToUpdate);
     }
 
     @Transactional
