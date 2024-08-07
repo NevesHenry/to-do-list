@@ -18,16 +18,16 @@ public class Task {
     private String title;
     private String description;
     private String status;
-    private String created_at;
-    private String updated_at;
-    private boolean is_active;
+    private String createdAt;
+    private String updatedAt;
+    private boolean isActive;
 
     public Task(PostTaskDTO postTaskDTO) {
         this.title = postTaskDTO.title();
         this.description = postTaskDTO.description();
         this.status = Status.BACKLOG.name();
-        this.created_at = LocalTime.now().toString();
-        this.updated_at = LocalTime.now().toString();
-        this.is_active = true;
+        this.createdAt = LocalTime.now().toString();
+        this.updatedAt = LocalTime.now().toString();
+        this.isActive = true;
     }
 }

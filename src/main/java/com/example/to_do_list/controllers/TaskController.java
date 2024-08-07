@@ -17,40 +17,42 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
-    private TaskRepository taskRepository;
+    private TaskRepository repository;
 
     @GetMapping
     public ResponseEntity<List<Task>> getTasks() {
-        var tasks = taskRepository.findAll();
+        var tasks = repository.findAll();
         return ResponseEntity.ok(tasks);
     }
 
     @Transactional
     @PostMapping
-    public ResponseEntity<HttpStatus> createTask(@RequestBody @Validated PostTaskDTO data) {
+    public ResponseEntity<Task> createTask(@RequestBody @Validated PostTaskDTO data) {
         System.out.println(data);
-        taskRepository.save(new Task(data));
-        return ResponseEntity.ok().build();
+        Task task = new Task(data);
+        repository.save(task);
+        return ResponseEntity.ok(task);
 
     }
 
     @Transactional
     @PutMapping
     public ResponseEntity<Task> updateTask(@RequestBody @Validated PostTaskDTO data) {
-        Optional<Task> task = taskRepository.findById(data.id());
+        Optional<Task> task = repository.findById(data.id());
         if (task.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Task taskToUpdate = task.get();
         taskToUpdate.setTitle(data.title());
         taskToUpdate.setDescription(data.description());
-        taskRepository.save(taskToUpdate);
+        repository.save(taskToUpdate);
         return ResponseEntity.ok(taskToUpdate);
     }
 
     @Transactional
-    @DeleteMapping
-    public String deleteTask() {
-        return "Task deleted";
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteTask(@PathVariable String id) {
+        repository.deleteById(Integer.valueOf(id));
+        return ResponseEntity.noContent().build();
     }
 }
