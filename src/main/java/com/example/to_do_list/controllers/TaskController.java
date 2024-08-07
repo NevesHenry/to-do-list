@@ -21,7 +21,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<Task>> getTasks() {
-        var tasks = repository.findAll();
+        var tasks = repository.findAllByIsActiveTrue();
         return ResponseEntity.ok(tasks);
     }
 
@@ -51,8 +51,14 @@ public class TaskController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteTask(@PathVariable String id) {
-        repository.deleteById(Integer.valueOf(id));
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Task> deleteTask(@PathVariable String id) {
+        Optional<Task> task = repository.findById(Integer.valueOf(id));
+        if (task.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Task taskToUpdate = task.get();
+        taskToUpdate.setActive(false);
+        repository.save(taskToUpdate);
+        return ResponseEntity.ok(taskToUpdate);
     }
 }
