@@ -2,7 +2,6 @@ package com.example.to_do_list.domain.task;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalTime;
 
 @Entity(name = "task")

@@ -2,10 +2,9 @@ package com.example.to_do_list.controllers;
 
 import com.example.to_do_list.domain.task.Task;
 import com.example.to_do_list.domain.task.PostTaskDTO;
-import com.example.to_do_list.domain.task.TaskRepository;
+import com.example.to_do_list.repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<Task>> getTasks() {
-        var tasks = repository.findAllByIsActiveTrue();
+        List<Task> tasks = repository.findAllByIsActiveTrue();
         return ResponseEntity.ok(tasks);
     }
 
@@ -42,11 +41,13 @@ public class TaskController {
         if (task.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Task taskToUpdate = task.get();
-        taskToUpdate.setTitle(data.title());
-        taskToUpdate.setDescription(data.description());
-        repository.save(taskToUpdate);
-        return ResponseEntity.ok(taskToUpdate);
+        else {
+            Task taskToUpdate = task.get();
+            taskToUpdate.setTitle(data.title());
+            taskToUpdate.setDescription(data.description());
+            repository.save(taskToUpdate);
+            return ResponseEntity.ok(taskToUpdate);
+        }
     }
 
     @Transactional
@@ -56,9 +57,11 @@ public class TaskController {
         if (task.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Task taskToUpdate = task.get();
-        taskToUpdate.setActive(false);
-        repository.save(taskToUpdate);
-        return ResponseEntity.ok(taskToUpdate);
+        else {
+            Task taskToUpdate = task.get();
+            taskToUpdate.setActive(false);
+            repository.save(taskToUpdate);
+            return ResponseEntity.ok(taskToUpdate);
+        }
     }
 }
