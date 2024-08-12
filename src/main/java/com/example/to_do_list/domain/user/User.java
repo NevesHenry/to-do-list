@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,22 +25,31 @@ public class User implements UserDetails {
     private String updatedAt;
     private boolean isActive;
 
+    public User(String username, String encryptedPassword, UserRole role) {
+        this.username = username;
+        this.password = encryptedPassword;
+        this.role = role;
+        this.isActive = true;
+        this.createdAt = LocalTime.now().toString();
+        this.updatedAt = LocalTime.now().toString();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.role == UserRole.ADMIN) {
-            return List.of(() -> "ROLE_ADMIN", () -> "ROLE_USER");
+            return List.of(() -> "admin", () -> "user");
         }
-        else return List.of(() -> "ROLE_USER");
+        else return List.of(() -> "user");
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     @Override
