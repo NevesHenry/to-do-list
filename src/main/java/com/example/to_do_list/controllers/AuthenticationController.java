@@ -1,8 +1,10 @@
 package com.example.to_do_list.controllers;
 
 import com.example.to_do_list.domain.user.AuthenticationDTO;
+import com.example.to_do_list.domain.user.LoginResponseDTO;
 import com.example.to_do_list.domain.user.RegisterDTO;
 import com.example.to_do_list.domain.user.User;
+import com.example.to_do_list.infra.security.TokenService;
 import com.example.to_do_list.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +27,16 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<HttpStatus> login(@RequestBody @Validated AuthenticationDTO data) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Validated AuthenticationDTO data) {
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
                 data.username(), data.password());
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
-        return ResponseEntity.ok().build();
+        String token = this.tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
