@@ -29,4 +29,8 @@ public class Task {
         this.updatedAt = LocalTime.now().toString();
         this.isActive = true;
     }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

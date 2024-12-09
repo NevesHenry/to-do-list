@@ -59,7 +59,7 @@ public class TaskController {
         }
         else {
             Task taskToUpdate = task.get();
-            taskToUpdate.setActive(false);
+            taskToUpdate.deactivate();
             repository.save(taskToUpdate);
             return ResponseEntity.ok(taskToUpdate);
         }

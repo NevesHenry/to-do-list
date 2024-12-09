@@ -71,4 +71,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.isActive;
     }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }
